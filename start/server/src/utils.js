@@ -1,6 +1,6 @@
-const SQL = require('sequelize');
+import SQL from 'sequelize';
 
-module.exports.paginateResults = ({
+const paginateResults = ({
   after: cursor,
   pageSize = 20,
   results,
@@ -28,7 +28,7 @@ module.exports.paginateResults = ({
     : results.slice(0, pageSize);
 };
 
-module.exports.createStore = () => {
+const createStore = () => {
   const Op = SQL.Op;
   const operatorsAliases = {
     $in: Op.in,
@@ -67,3 +67,8 @@ module.exports.createStore = () => {
 
   return { users, trips };
 };
+
+export {
+  paginateResults,
+  createStore,
+}
