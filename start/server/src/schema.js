@@ -8,7 +8,6 @@ Your schema's structure should support the actions that your clients will take. 
 - Cancel a previously booked launch for a logged-in user
 */
 
-//const { gql } = require("apollo-server");
 import { gql } from 'apollo-server';
 
 const typeDefs = gql`

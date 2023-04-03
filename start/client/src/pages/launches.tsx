@@ -1,7 +1,7 @@
-import React, {  Fragment, useState } from 'react';
+import {  Fragment, useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { LaunchTile, Header, Button, Loading } from "../components";
-import * as GetLaunchListTypes from "./__generated__/GetLaunchList";
+//import * as GetLaunchListTypes from "./__generated__/GetLaunchList";
 
 export const LAUNCH_TILE_DATA = gql`
   fragment LaunchTile on Launch {
@@ -32,7 +32,7 @@ export const GET_LAUNCHES = gql`
   ${LAUNCH_TILE_DATA}
 `;
 
-interface LaunchesProps {}
+//interface LaunchesProps {}
 
 const Launches = () => {
   const { data, loading, error, fetchMore } = useQuery(GET_LAUNCHES);
