@@ -4,12 +4,13 @@ import styled from '@emotion/styled';
 import { unit } from '../styles';
 import { cardClassName, getBackgroundImage } from './launch-tile';
 
-const LaunchDetail: React.FC<any> = ({ id, site, rocket }: any) => (
+const LaunchDetail: React.FC<any> = ({ id, site, rocket, mission }: any) => (
   <Card
     style={{
       backgroundImage: getBackgroundImage(id as string),
     }}
   >
+    <h2>{mission && mission.name}</h2>
     <h3>
       {rocket && rocket.name} ({rocket && rocket.type})
     </h3>
