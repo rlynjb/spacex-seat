@@ -14,6 +14,7 @@ export function getBackgroundImage(id: string) {
 
 const LaunchTile = ({ launch }: any) => {
   const { id, mission, rocket } = launch;
+
   return (
     <StyledLink
       to={`/launch/${id}`}

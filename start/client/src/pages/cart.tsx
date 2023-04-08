@@ -18,7 +18,7 @@ const Cart: React.FC<CartProps> = () => {
   const cartItems = useReactiveVar(cartItemsVar);
 
   // NOTE: for some reason, useQuery is returning undefined
-  const { data, loading, error } = useQuery(GET_CART_ITEMS);
+  const { loading, error, data } = useQuery<GetCartItems>(GET_CART_ITEMS);
 
   if (loading) return <Loading />;
   if (error) return <p>ERROR: {error.message}</p>;

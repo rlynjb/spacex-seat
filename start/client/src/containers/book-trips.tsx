@@ -29,7 +29,7 @@ const BookTrips: React.FC<BookTripsProps> = ({ cartItems }) => {
   >(BOOK_TRIPS, {
     variables: { launchIds: cartItems }
   });
-
+console.log('Book trips:: ', data)
   return data && data.bookTrips && !data.bookTrips.success
     ? ( <p data-testid="message">{data.bookTrips.message}</p> )
     : (
