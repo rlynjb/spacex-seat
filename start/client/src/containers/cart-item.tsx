@@ -21,8 +21,10 @@ const CartItem: React.FC<CartItemProps> = ({ launchId }) => {
     GET_LAUNCH,
     { variables: { launchId } }
   );
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>ERROR: {error.message}</p>;
+  
   return data && <LaunchTile launch={data.launch} />;
 }
 

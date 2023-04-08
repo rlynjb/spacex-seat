@@ -1,5 +1,6 @@
 import { 
   ApolloClient,
+  NormalizedCacheObject,
   ApolloProvider,
   gql,
   useQuery
@@ -28,7 +29,7 @@ export const typeDefs = gql`
 `;
 
 // Initialize ApolloClient
-const client = new ApolloClient({
+const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   cache,
   uri: 'http://localhost:4000/graphql',
   headers: {
