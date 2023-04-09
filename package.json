@@ -1,0 +1,22 @@
+{
+  "name": "spacex-seat",
+  "version": "1.0.0",
+  "description": "This is the fullstack app for the [Apollo tutorial](https://www.apollographql.com/tutorials/fullstack-quickstart/introduction). 🚀",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rlynjb/spacex-seat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rlynjb/spacex-seat/issues"
+  },
+  "homepage": "https://github.com/rlynjb/spacex-seat#readme",
+  "devDependencies": {
+    "netlify-cli": "^13.2.2"
+  }
+}
