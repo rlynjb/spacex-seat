@@ -12,14 +12,12 @@ export const GET_CART_ITEMS = gql`
   }
 `;
 
-interface CartProps {}
-
 const Cart = () => {
   const cartItems = useReactiveVar(cartItemsVar);
   // ^^ ref: https://www.apollographql.com/docs/react/local-state/managing-state-with-field-policies
 
   // NOTE: for some reason, useQuery is returning undefined
-  const { data, loading, error } = useQuery(GET_CART_ITEMS);
+  const { loading, error } = useQuery<GetCartItems>(GET_CART_ITEMS);
 
   if (loading) return <Loading />;
   if (error) return <p>ERROR: {error.message}</p>;

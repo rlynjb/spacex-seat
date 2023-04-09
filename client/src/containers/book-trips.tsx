@@ -5,7 +5,6 @@ import Button from '../components/button';
 import { cartItemsVar } from '../cache';
 import * as GetCartItemsTypes from '../pages/__generated__/GetCartItems';
 import * as BookTripsTypes from './__generated__/BookTrips';
-import { CartItem } from '.';
 
 export const BOOK_TRIPS = gql`
   mutation BookTrips($launchIds: [ID]!) {
