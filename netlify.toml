@@ -17,4 +17,6 @@
 
   # Default build command.
   command = "npm run build"
-  functions = "netlify/functions"
+
+  [functions]
+    directory = "netlify/functions"
