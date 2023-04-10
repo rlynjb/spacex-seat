@@ -21,4 +21,4 @@
   functions = "functions"
 
 [functions]
-  directory = "server/functions"
+  directory = "server/netlify/functions"
