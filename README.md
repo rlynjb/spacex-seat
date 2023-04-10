@@ -24,3 +24,6 @@ and
 ```bash
 cd final/client && npm i && npm start
 ```
+
+## Deploy to Netlify
+ref: https://khalilstemmler.com/articles/tutorials/deploying-a-serverless-graphql-api-on-netlify/
