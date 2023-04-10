@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.js": "/static/js/main.593a5245.js",
+    "static/media/space.jpg": "/static/media/space.2bc8fa755a336b362920.jpg",
+    "static/media/iss.jpg": "/static/media/iss.85e97a3658472f796308.jpg",
+    "static/media/moon.jpg": "/static/media/moon.0260d14c968e5ac141fb.jpg",
+    "static/media/galaxy.jpg": "/static/media/galaxy.b4fea1844e5ba861a837.jpg",
+    "static/media/dog-1.png": "/static/media/dog-1.600e5ae235179b0f775f.png",
+    "static/media/dog-2.png": "/static/media/dog-2.4040c1c8de88cbbc0897.png",
+    "static/media/dog-3.png": "/static/media/dog-3.4db6d6e44cf45c9684e9.png",
+    "static/media/rocket.svg": "/static/media/rocket.e3cb6032d4812b3b166e7c45b2e64d86.svg",
+    "static/media/profile.svg": "/static/media/profile.8a612528fc86c628428e74e063868002.svg",
+    "static/media/cart.svg": "/static/media/cart.a5640c739f0556d22769713aa68b7e02.svg",
+    "static/media/exit.svg": "/static/media/exit.2f123768b7f6eb77adc526e84d6c3ee4.svg",
+    "static/media/home.svg": "/static/media/home.0a0b38464bc8427b9e0b576a9abec035.svg",
+    "static/media/logo.svg": "/static/media/logo.7fdccaa113dd1814848d42b5d7c6e9e8.svg",
+    "index.html": "/index.html",
+    "static/media/curve.svg": "/static/media/curve.efa9b61bf34e999deb51c365b6e32002.svg",
+    "main.593a5245.js.map": "/static/js/main.593a5245.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.593a5245.js"
+  ]
+}
