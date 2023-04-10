@@ -17,3 +17,4 @@
 
   # Default build command.
   command = "npm run build"
+  functions = "functions"
