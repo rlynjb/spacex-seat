@@ -24,7 +24,10 @@ const resolvers = {
       };
     },
     launch: (_, { id }, { dataSources }) => dataSources.launchAPI.getLaunchById({ launchId: id }),
-    me: (_, __, { dataSources }) => dataSources.userAPI.findOrCreateUser()
+    me: (_, __, { dataSources }) => {
+      console.log('src/resolvers.js - Query.me()', dataSources)
+      return dataSources.userAPI.findOrCreateUser()
+    }
   },
   Mission: {
     missionPatch: (mission, { size } = {size: 'LARGE'}) => {
@@ -55,6 +58,8 @@ const resolvers = {
 
   Mutation: {
     login: async (_, { email }, { dataSources }) => {
+      console.log('3) src/resolvers.js - login()')
+
       const user = await dataSources.userAPI.findOrCreateUser({ email });
       if (user) {
         user.token = Buffer.from(email).toString('base64');

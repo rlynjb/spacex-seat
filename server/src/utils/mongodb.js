@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const createMongoDBStore = () => {
+export const createMongoDBStore = () => {
+  console.log('1) src/utils/mongodb.js')
   const uri = "mongodb+srv://rlynjb:ikwiw@cluster0.shsvqzj.mongodb.net/?retryWrites=true&w=majority";
 
   const db = async() => {
@@ -18,42 +19,22 @@ const createMongoDBStore = () => {
       console.error(error);
     });
 
-  /*
-    const users = db.define('user', {
-      id: {
-        type: SQL.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      createdAt: SQL.DATE,
-      updatedAt: SQL.DATE,
-      email: SQL.STRING,
-      token: SQL.STRING,
-    });
-  */
   const users = mongoose.model("User", {
-    id: Number,
+    id: {
+      type: mongoose.Types.ObjectId,
+      auto: true
+    },
     createdAt: String,
     updatedAt: String,
     email: String,
     token: String
   });
 
-  /*
-    const trips = db.define('trip', {
-      id: {
-        type: SQL.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      createdAt: SQL.DATE,
-      updatedAt: SQL.DATE,
-      launchId: SQL.INTEGER,
-      userId: SQL.INTEGER,
-    });
-  */
   const trips = mongoose.model("Trip", {
-    id: Number,
+    id: {
+      type: mongoose.Types.ObjectId,
+      auto: true
+    },
     createdAt: String,
     updatedAt: String,
     launchId: Number,
@@ -62,11 +43,6 @@ const createMongoDBStore = () => {
 
   return { users, trips };
 };
-
-
-export {
-  createMongoDBStore
-}
 
 
 // ref: https://www.koyeb.com/tutorials/deploy-a-graphql-api-with-mongodb-atlas-and-apollo-server-on-koyeb#create-a-mongo-db-database-using-mongo-atlas

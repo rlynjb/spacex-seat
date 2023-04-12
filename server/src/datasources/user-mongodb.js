@@ -2,16 +2,17 @@ import { MongoDataSource } from "apollo-datasource-mongodb";
 import isEmail from 'isemail';
 
 class UserAPI extends MongoDataSource {
-  constructor({ store }) {
-    super();
-    this.store = store;
+  constructor(options) {
+    super(options);
+    this.store = options.store;
   }
 
-  initialize({ config }) {
+  initialize(config) {
     this.context = config.context;
   }
 
   async findOrCreateUser({ email: emailArg } = {}) {
+    console.log('4) src/datasources/user-mongodb.js')
     const email = this.context && this.context.user
       ? this.context.user.email
       : emailArg;
@@ -20,10 +21,11 @@ class UserAPI extends MongoDataSource {
 
     // since mongoose doesnt have findOrCreate, we'll have to do it manually
     // if theres no user, create one
-    const users = await this.store.users.find({ where: { email } });
-    if (!users) {
-      users = await this.store.users.create({ email });
+    const users = await this.store.users.find({ email: email }).exec();
+    if (!users.length) {
+      users = await this.store.users.create({ email: email });
     }
+
     return users && users[0] ? users[0] : null;
   }
 

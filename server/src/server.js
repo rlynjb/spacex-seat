@@ -5,24 +5,24 @@ import { gql } from 'apollo-server-lambda';
 import { typeDefs } from './schema.js';
 import { resolvers } from "./resolvers.js";
 import { LaunchAPI } from "./datasources/launch.js";
-import { UserAPI } from "./datasources/user.js";
+//import { UserAPI } from "./datasources/user.js";
+import { UserAPI } from "./datasources/user-mongodb.js";
 //import { createStore } from "./utils/sqlite.js";
 import { createMongoDBStore } from "./utils/mongodb.js";
 import isEmail from "isemail";
 
 //const sqlitedb = createStore();
-const mongodb = createMongoDBStore();
+const store = createMongoDBStore();
 
 const config = {
   typeDefs,
   resolvers,
   dataSources: () => ({
     launchAPI: new LaunchAPI(),
-    userAPI: new UserAPI({ mongodb }),
+    userAPI: new UserAPI({ store }),
   }),
   context: async ({ req }) => {
-    mongodb();
-    console.log('mongodb>> ', mongodb)
+    console.log('2) src/server.js')
     // simple auth check on every request
     const auth = (req.headers && req.headers.authorization) || "";
     const email = Buffer.from(auth, "base64").toString("ascii");
@@ -30,12 +30,12 @@ const config = {
     if (!isEmail.validate(email)) return { user: null };
 
     // find a user by their email
-    const users = await mongodb.users.find({ where: { email } });
+    const users = await store.users.find({ where: { email } });
     if (!users) {
-      users = await mongodb.users.create({ email });
+      users = await store.users.create({ email });
     }
     const user = (users && users[0]) || null;
-
+    console.log('5) back to src/server.js user:: ', users)
     return { user: { ...user.dataValues } };
   },
   introspection: true,
