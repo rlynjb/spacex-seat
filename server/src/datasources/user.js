@@ -1,6 +1,8 @@
 import { DataSource } from 'apollo-datasource';
 import isEmail from 'isemail';
 
+console.log('startup 3. datasource - user-sqlite')
+
 class UserAPI extends DataSource {
   constructor({ store }) {
     super();

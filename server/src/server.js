@@ -1,18 +1,18 @@
 import { ApolloServer } from 'apollo-server';
 import { ApolloServer as ApolloServerLambda } from 'apollo-server-lambda';
 
-import { gql } from 'apollo-server-lambda';
 import { typeDefs } from './schema.js';
 import { resolvers } from "./resolvers.js";
 import { LaunchAPI } from "./datasources/launch.js";
-//import { UserAPI } from "./datasources/user.js";
-import { UserAPI } from "./datasources/user-mongodb.js";
-//import { createStore } from "./utils/sqlite.js";
-import { createMongoDBStore } from "./utils/mongodb.js";
+import { UserAPI } from "./datasources/user.js";
+//import { UserAPI } from "./datasources/user-mongodb.js";
+import { createStore } from "./utils/sqlite.js";
+//import { createStore } from "./utils/mongodb.js";
 import isEmail from "isemail";
 
-//const sqlitedb = createStore();
-const store = createMongoDBStore();
+const store = createStore();
+
+console.log('startup 5. server')
 
 const config = {
   typeDefs,
@@ -22,20 +22,25 @@ const config = {
     userAPI: new UserAPI({ store }),
   }),
   context: async ({ req }) => {
-    console.log('2) src/server.js')
+    console.log('5. context')
+
     // simple auth check on every request
     const auth = (req.headers && req.headers.authorization) || "";
     const email = Buffer.from(auth, "base64").toString("ascii");
 
+    console.log('5. auth', req.headers)
+
     if (!isEmail.validate(email)) return { user: null };
 
+    console.log('5. after auth')
+
     // find a user by their email
-    const users = await store.users.find({ where: { email } });
+    const users = await store.users.find({ email });
     if (!users) {
       users = await store.users.create({ email });
     }
     const user = (users && users[0]) || null;
-    console.log('5) back to src/server.js user:: ', users)
+
     return { user: { ...user.dataValues } };
   },
   introspection: true,

@@ -1,10 +1,13 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-export const createMongoDBStore = () => {
-  console.log('1) src/utils/mongodb.js')
+console.log('startup 4. utils - mongodb')
+
+export const createStore = () => {
+  console.log('4. createMongoDBStore')
   const uri = "mongodb+srv://rlynjb:ikwiw@cluster0.shsvqzj.mongodb.net/?retryWrites=true&w=majority";
 
   const db = async() => {
+    console.log('4. db')
     return await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -22,10 +25,11 @@ export const createMongoDBStore = () => {
   const users = mongoose.model("User", {
     id: {
       type: mongoose.Types.ObjectId,
-      auto: true
+      auto: true,
+      set: (val) => val.toString()
     },
-    createdAt: String,
-    updatedAt: String,
+    createdAt: Date,
+    updatedAt: Date,
     email: String,
     token: String
   });
@@ -33,10 +37,11 @@ export const createMongoDBStore = () => {
   const trips = mongoose.model("Trip", {
     id: {
       type: mongoose.Types.ObjectId,
-      auto: true
+      auto: true,
+      set: (val) => val.toString()
     },
-    createdAt: String,
-    updatedAt: String,
+    createdAt: Date,
+    updatedAt: Date,
     launchId: Number,
     userId: Number
   });

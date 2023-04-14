@@ -9,9 +9,38 @@ Your schema's structure should support the actions that your clients will take. 
 */
 
 import { gql } from 'apollo-server';
-
+console.log('startup 1. schema')
 const typeDefs = gql`
-  # Your schema will go here
+  type Query {
+    launches(pageSize: Int, after: String): LaunchConnection!
+    launch(id: ID!): Launch
+    me: User
+  }
+
+  type Mutation {
+    bookTrips(launchIds: [ID]!): TripUpdateResponse!
+    cancelTrip(launchId: ID!): TripUpdateResponse!
+    login(email: String): User
+  }
+
+  type TripUpdateResponse {
+    success: Boolean!
+    message: String
+    launches: [Launch]
+  }
+
+  """
+  Simple wrapper around our list of launches that contains a cursor to the
+  last item in the list. Pass this cursor to the launches query to fetch results
+  after these.
+  """
+
+  type LaunchConnection {
+    cursor: String!
+    hasMore: Boolean!
+    launches: [Launch]!
+  }
+
   type Launch {
     id: ID!
     site: String
@@ -29,6 +58,7 @@ const typeDefs = gql`
   type User {
     id: ID!
     email: String!
+    profileImage: String
     trips: [Launch]!
     token: String
   }
@@ -41,30 +71,6 @@ const typeDefs = gql`
   enum PatchSize {
     SMALL
     LARGE
-  }
-
-  type Query {
-    launches(pageSize: Int, after: String): LaunchConnection!
-    launch(id: ID!): Launch
-    me: User
-  }
-
-  type LaunchConnection {
-    cursor: String!
-    hasMore: Boolean!
-    launches: [Launch]!
-  }
-
-  type Mutation {
-    bookTrips(launchIds: [ID]!): TripUpdateResponse!
-    cancelTrip(launchId: ID!): TripUpdateResponse!
-    login(email: String): User
-  }
-
-  type TripUpdateResponse {
-    success: Boolean!
-    message: String
-    launches: [Launch]
   }
 `;
 

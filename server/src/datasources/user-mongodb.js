@@ -1,18 +1,23 @@
 import { MongoDataSource } from "apollo-datasource-mongodb";
 import isEmail from 'isemail';
 
+console.log('startup 3. datasource - user-mongodb')
+
 class UserAPI extends MongoDataSource {
   constructor(options) {
+    console.log('3. constructor')
+    
     super(options);
     this.store = options.store;
   }
 
   initialize(config) {
+    console.log('3. initialize')
     this.context = config.context;
   }
 
   async findOrCreateUser({ email: emailArg } = {}) {
-    console.log('4) src/datasources/user-mongodb.js')
+    console.log('3. findOrCreateUser')
     const email = this.context && this.context.user
       ? this.context.user.email
       : emailArg;
@@ -21,15 +26,16 @@ class UserAPI extends MongoDataSource {
 
     // since mongoose doesnt have findOrCreate, we'll have to do it manually
     // if theres no user, create one
-    const users = await this.store.users.find({ email: email }).exec();
+    const users = await this.store.users.find({ email }).exec();
     if (!users.length) {
-      users = await this.store.users.create({ email: email });
+      users = await this.store.users.create({ email });
     }
 
     return users && users[0] ? users[0] : null;
   }
 
   async bookTrips({ launchIds }) {
+    console.log('3. bookTrips', this.context)
     const userId = this.context.user.id;
     if (!userId) return;
 
@@ -39,6 +45,8 @@ class UserAPI extends MongoDataSource {
     // if successful
     for (const launchId of launchIds) {
       const res = await this.bookTrip({ launchId });
+      console.log('src/datasources/user-mongodb.js, res', res)
+      console.log('userId', userId)
       if (res) results.push(res);
     }
 
@@ -48,25 +56,30 @@ class UserAPI extends MongoDataSource {
   async bookTrip({ launchId }) {
     const userId = this.context.user.id;
 
-    // find MONGOOSE equivalent
-    const res = await this.store.trips.findOrCreate({
-      where: { userId, launchId },
-    });
+    const res = await this.store.trips.find({
+      userId, launchId
+    }).exec();
+
+    if (!res.length) {
+      res = await this.store.trips.create({
+        userId, launchId
+      });
+    }
+
     return res && res.length ? res[0].get() : false;
   }
 
   async cancelTrip({ launchId }) {
     const userId = this.context.user.id;
 
-    return !!this.store.trips.deleteOne({ where: { userId, launchId } });
+    return !!this.store.trips.deleteMany({ userId, launchId });
   }
 
   async getLaunchIdsByUser() {
     const userId = this.context.user.id;
 
-    const found = await this.store.trips.find({
-      where: { userId },
-    });
+    const found = await this.store.trips.find({ userId });
+
     return found && found.length
       ? found.map(l => l.dataValues.launchId).filter(l => !!l)
       : [];
@@ -76,9 +89,7 @@ class UserAPI extends MongoDataSource {
     if (!this.context || !this.context.user) return false;
     const userId = this.context.user.id;
 
-    const found = await this.store.trips.find({
-      where: { userId, launchId },
-    });
+    const found = await this.store.trips.find({ userId, launchId });
     return found && found.length > 0;
   }
 }
