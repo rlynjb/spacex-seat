@@ -1,58 +1,56 @@
-import { ApolloServer } from 'apollo-server';
-import { ApolloServer as ApolloServerLambda } from 'apollo-server-lambda';
+require('dotenv').config();
 
-import { typeDefs } from './schema.js';
-import { resolvers } from "./resolvers.js";
-import { LaunchAPI } from "./datasources/launch.js";
-import { UserAPI } from "./datasources/user.js";
-//import { UserAPI } from "./datasources/user-mongodb.js";
-import { createStore } from "./utils/sqlite.js";
-//import { createStore } from "./utils/mongodb.js";
-import isEmail from "isemail";
+const { ApolloServer } = require('apollo-server');
+const { ApolloServerPluginLandingPageLocalDefault } = require('apollo-server-core');
+const isEmail = require('isemail');
 
+const typeDefs = require('./schema');
+const resolvers = require('./resolvers');
+const { createStore } = require('./utils');
+
+const LaunchAPI = require('./datasources/launch');
+const UserAPI = require('./datasources/user');
+
+// creates a sequelize connection once. NOT for every request
 const store = createStore();
 
-console.log('startup 5. server')
+// set up any dataSources our resolvers need
+const dataSources = () => ({
+  launchAPI: new LaunchAPI(),
+  userAPI: new UserAPI({ store }),
+});
 
-const config = {
-  typeDefs,
-  resolvers,
-  dataSources: () => ({
-    launchAPI: new LaunchAPI(),
-    userAPI: new UserAPI({ store }),
-  }),
-  context: async ({ req }) => {
-    console.log('5. context')
+// the function that sets up the global context for each resolver, using the req
+const context = async ({ req }) => {
+  // simple auth check on every request
+  const auth = (req.headers && req.headers.authorization) || '';
+  const email = Buffer.from(auth, 'base64').toString('ascii');
 
-    // simple auth check on every request
-    const auth = (req.headers && req.headers.authorization) || "";
-    const email = Buffer.from(auth, "base64").toString("ascii");
+  // if the email isn't formatted validly, return null for user
+  if (!isEmail.validate(email)) return { user: null };
+  // find a user by their email
+  const users = await store.users.findOrCreate({ where: { email } });
+  const user = users && users[0] ? users[0] : null;
 
-    console.log('5. auth', req.headers)
-
-    if (!isEmail.validate(email)) return { user: null };
-
-    console.log('5. after auth')
-
-    // find a user by their email
-    const users = await store.users.find({ email });
-    if (!users) {
-      users = await store.users.create({ email });
-    }
-    const user = (users && users[0]) || null;
-
-    return { user: { ...user.dataValues } };
-  },
-  introspection: true,
-  playground: true,
+  return { user };
 };
 
 
-export const createLambdaServer = () => {
-  return new ApolloServerLambda(config);
-};
+// Set up Apollo Server
+const createLocalServer = () => {
+  return new ApolloServer({
+    typeDefs,
+    resolvers,
+    dataSources,
+    context,
+    introspection: true,
+    apollo: {
+      key: process.env.APOLLO_KEY,
+    },
+    plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
+  });
+}
 
-
-export const createLocalServer = () => {
-  return new ApolloServer(config);
-};
+module.exports = {
+  createLocalServer
+}

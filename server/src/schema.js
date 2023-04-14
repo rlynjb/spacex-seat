@@ -1,25 +1,28 @@
-/*
-Your schema's structure should support the actions that your clients will take. Our example app needs to be able to:
+const { gql } = require('apollo-server');
 
-- Fetch a list of all upcoming rocket launches
-- Fetch a specific launch by its ID
-- Log in the user
-- Book a launch for a logged-in user
-- Cancel a previously booked launch for a logged-in user
-*/
-
-import { gql } from 'apollo-server';
-console.log('startup 1. schema')
 const typeDefs = gql`
   type Query {
-    launches(pageSize: Int, after: String): LaunchConnection!
+    launches(
+      """
+      The number of results to show. Must be >= 1. Default = 20
+      """
+      pageSize: Int
+      """
+      If you add a cursor here, it will only return results _after_ this cursor
+      """
+      after: String
+    ): LaunchConnection!
     launch(id: ID!): Launch
     me: User
   }
 
   type Mutation {
+    # if false, signup failed -- check errors
     bookTrips(launchIds: [ID]!): TripUpdateResponse!
+
+    # if false, cancellation failed -- check errors
     cancelTrip(launchId: ID!): TripUpdateResponse!
+
     login(email: String): User
   }
 
@@ -34,7 +37,6 @@ const typeDefs = gql`
   last item in the list. Pass this cursor to the launches query to fetch results
   after these.
   """
-
   type LaunchConnection {
     cursor: String!
     hasMore: Boolean!
@@ -54,7 +56,7 @@ const typeDefs = gql`
     name: String
     type: String
   }
-  
+
   type User {
     id: ID!
     email: String!
@@ -62,7 +64,7 @@ const typeDefs = gql`
     trips: [Launch]!
     token: String
   }
-  
+
   type Mission {
     name: String
     missionPatch(size: PatchSize): String
@@ -74,6 +76,4 @@ const typeDefs = gql`
   }
 `;
 
-export {
-  typeDefs
-}
+module.exports = typeDefs;

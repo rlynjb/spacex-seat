@@ -1,14 +1,11 @@
-//require('dotenv').config();
+const { createLocalServer } = require('./server');
 
-import { createLocalServer } from './server.js';
+// Start our server if we're not in a test env.
+// if we're in a test env, we'll manually start it in a test
+if (process.env.NODE_ENV !== 'test') {
+  console.log('startup 1. - index');
 
-const server = createLocalServer();
-
-server.listen().then(() => {
-  console.log('startup 1. - index')
-  console.log(`
-    Server is running!
-    Listening on port 4000
-    Explore at https://studio.apollographql.com/sandbox
-  `);
-});
+  createLocalServer().listen().then(() => {
+    console.log(`Server is running at http://localhost:4000`);
+  });
+}
