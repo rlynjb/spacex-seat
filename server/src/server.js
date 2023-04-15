@@ -36,8 +36,7 @@ const config = {
       users = await store.users.create({ email });
     }
     const user = (users && users[0]) || null;
-
-    return { user: { ...user.dataValues } };
+    return { user: { user } };
   },
   introspection: true,
   playground: true,

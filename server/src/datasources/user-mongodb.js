@@ -11,7 +11,6 @@ class UserAPI extends MongoDataSource {
 
   initialize(config) {
     this.context = config.context;
-    console.log('3. config', config)
   }
 
   async findOrCreateUser({ email: emailArg } = {}) {
@@ -32,7 +31,7 @@ class UserAPI extends MongoDataSource {
   }
 
   async bookTrips({ launchIds }) {
-    const userId = this.context.user.id;
+    const userId = this.context.user.user.id;
     if (!userId) return;
 
     let results = [];
@@ -41,8 +40,6 @@ class UserAPI extends MongoDataSource {
     // if successful
     for (const launchId of launchIds) {
       const res = await this.bookTrip({ launchId });
-      console.log('src/datasources/user-mongodb.js, res', res)
-      console.log('userId', userId)
       if (res) results.push(res);
     }
 
