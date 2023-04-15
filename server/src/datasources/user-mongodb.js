@@ -4,20 +4,17 @@ import isEmail from 'isemail';
 console.log('startup 3. datasource - user-mongodb')
 
 class UserAPI extends MongoDataSource {
-  constructor(options) {
-    console.log('3. constructor')
-    
+  constructor(options) {    
     super(options);
     this.store = options.store;
   }
 
   initialize(config) {
-    console.log('3. initialize')
     this.context = config.context;
+    console.log('3. config', config)
   }
 
   async findOrCreateUser({ email: emailArg } = {}) {
-    console.log('3. findOrCreateUser')
     const email = this.context && this.context.user
       ? this.context.user.email
       : emailArg;
@@ -35,7 +32,6 @@ class UserAPI extends MongoDataSource {
   }
 
   async bookTrips({ launchIds }) {
-    console.log('3. bookTrips', this.context)
     const userId = this.context.user.id;
     if (!userId) return;
 
@@ -71,13 +67,11 @@ class UserAPI extends MongoDataSource {
 
   async cancelTrip({ launchId }) {
     const userId = this.context.user.id;
-
     return !!this.store.trips.deleteMany({ userId, launchId });
   }
 
   async getLaunchIdsByUser() {
     const userId = this.context.user.id;
-
     const found = await this.store.trips.find({ userId });
 
     return found && found.length
@@ -87,9 +81,10 @@ class UserAPI extends MongoDataSource {
 
   async isBookedOnLaunch({ launchId }) {
     if (!this.context || !this.context.user) return false;
-    const userId = this.context.user.id;
 
+    const userId = this.context.user.id;
     const found = await this.store.trips.find({ userId, launchId });
+
     return found && found.length > 0;
   }
 }

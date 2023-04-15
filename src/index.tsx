@@ -1,10 +1,12 @@
 import { 
   ApolloClient,
-  NormalizedCacheObject,
+  createHttpLink,
   ApolloProvider,
   gql,
   useQuery
 } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+
 import { cache } from './cache';
 import ReactDOM from 'react-dom/client';
 import Pages from './pages';
@@ -28,14 +30,25 @@ export const typeDefs = gql`
   }
 `;
 
-// Initialize ApolloClient
-const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  cache,
+const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql',
-  headers: {
-    authorization: localStorage.getItem('token') || ''
-  },
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('token');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? token : '',
+    }
+  }
+});
+
+// Initialize ApolloClient
+const client = new ApolloClient({
+  cache,
   typeDefs,
+  link: authLink.concat(httpLink),
 });
 
 injectStyles();

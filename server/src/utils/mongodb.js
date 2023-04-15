@@ -3,11 +3,9 @@ import mongoose from "mongoose";
 console.log('startup 4. utils - mongodb')
 
 export const createStore = () => {
-  console.log('4. createMongoDBStore')
   const uri = "mongodb+srv://rlynjb:ikwiw@cluster0.shsvqzj.mongodb.net/?retryWrites=true&w=majority";
 
   const db = async() => {
-    console.log('4. db')
     return await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
