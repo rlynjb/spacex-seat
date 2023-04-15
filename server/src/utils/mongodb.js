@@ -22,26 +22,42 @@ export const createStore = () => {
 
   const users = mongoose.model("User", {
     id: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
+      get: (v) => v.toString(),
       auto: true,
-      set: (val) => val.toString()
     },
-    createdAt: Date,
-    updatedAt: Date,
-    email: String,
-    token: String
+    createdAt: {
+      type: mongoose.Schema.Types.Date
+    },
+    updatedAt: {
+      type: mongoose.Schema.Types.Date
+    },
+    email: {
+      type: mongoose.Schema.Types.String
+    },
+    token: {
+      type: mongoose.Schema.Types.String
+    }
   });
 
   const trips = mongoose.model("Trip", {
     id: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
+      get: (v) => v.toString(),
       auto: true,
-      set: (val) => val.toString()
     },
-    createdAt: Date,
-    updatedAt: Date,
-    launchId: Number,
-    userId: Number
+    createdAt: {
+      type: mongoose.Schema.Types.Date
+    },
+    updatedAt: {
+      type: mongoose.Schema.Types.Date
+    },
+    launchId: {
+      type: mongoose.Schema.Types.String
+    },
+    userId: {
+      type: mongoose.Schema.Types.String
+    }
   });
 
   return { users, trips };

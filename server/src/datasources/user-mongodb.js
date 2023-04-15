@@ -31,15 +31,15 @@ class UserAPI extends MongoDataSource {
   }
 
   async bookTrips({ launchIds }) {
-    const userId = this.context.user.user.id;
+    let userId = this.context.user.user.id;
     if (!userId) return;
-
+console.log('5. bookTrips-- ', userId)
     let results = [];
 
     // for each launch id, try to book the trip and add it to the results array
     // if successful
     for (const launchId of launchIds) {
-      const res = await this.bookTrip({ launchId });
+      let res = await this.bookTrip({ launchId });
       if (res) results.push(res);
     }
 
@@ -47,9 +47,9 @@ class UserAPI extends MongoDataSource {
   }
 
   async bookTrip({ launchId }) {
-    const userId = this.context.user.id;
+    let userId = this.context.user.user.id;
 
-    const res = await this.store.trips.find({
+    let res = await this.store.trips.find({
       userId, launchId
     }).exec();
 
@@ -68,9 +68,9 @@ class UserAPI extends MongoDataSource {
   }
 
   async getLaunchIdsByUser() {
-    const userId = this.context.user.id;
+    const userId = this.context.user.user.id;
     const found = await this.store.trips.find({ userId });
-
+console.log('3. getLaunchIdsByUser-- ', found)
     return found && found.length
       ? found.map(l => l.dataValues.launchId).filter(l => !!l)
       : [];
@@ -79,7 +79,7 @@ class UserAPI extends MongoDataSource {
   async isBookedOnLaunch({ launchId }) {
     if (!this.context || !this.context.user) return false;
 
-    const userId = this.context.user.id;
+    const userId = this.context.user.user.id;
     const found = await this.store.trips.find({ userId, launchId });
 
     return found && found.length > 0;
