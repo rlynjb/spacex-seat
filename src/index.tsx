@@ -30,6 +30,9 @@ export const typeDefs = gql`
   }
 `;
 
+// code setup below is a fix for authorixation header not setting in
+// ref: https://github.com/apollographql/fullstack-tutorial/issues/62
+
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql',
 });
