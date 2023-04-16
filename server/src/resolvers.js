@@ -52,8 +52,7 @@ const resolvers = {
       };
     },
     cancelTrip: async (_, { launchId }, { dataSources }) => {
-      let result = dataSources.userAPI.cancelTrip({ launchId });
-
+      let result = await dataSources.userAPI.cancelTrip({ launchId });
       if (!result)
         return {
           success: false,

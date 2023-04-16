@@ -62,7 +62,7 @@ class UserAPI extends MongoDataSource {
 
   async cancelTrip({ launchId }) {
     const userId = this.context.user.user.id;
-    return !!this.store.trips.deleteMany({ userId, launchId });
+    return this.store.trips.deleteMany({ userId, launchId });
   }
 
   async getLaunchIdsByUser() {
