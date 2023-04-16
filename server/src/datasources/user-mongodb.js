@@ -15,25 +15,23 @@ class UserAPI extends MongoDataSource {
 
   async findOrCreateUser({ email: emailArg } = {}) {
     const email = this.context && this.context.user
-      ? this.context.user.email
+      ? this.context.user.user.email
       : emailArg;
-
     if (!email || !isEmail.validate(email)) return null;
 
     // since mongoose doesnt have findOrCreate, we'll have to do it manually
     // if theres no user, create one
-    const users = await this.store.users.find({ email }).exec();
+    let users = await this.store.users.find({ email }).exec();
     if (!users.length) {
       users = await this.store.users.create({ email });
     }
-
     return users && users[0] ? users[0] : null;
   }
 
   async bookTrips({ launchIds }) {
     let userId = this.context.user.user.id;
     if (!userId) return;
-console.log('5. bookTrips-- ', userId)
+
     let results = [];
 
     // for each launch id, try to book the trip and add it to the results array
@@ -63,16 +61,16 @@ console.log('5. bookTrips-- ', userId)
   }
 
   async cancelTrip({ launchId }) {
-    const userId = this.context.user.id;
+    const userId = this.context.user.user.id;
     return !!this.store.trips.deleteMany({ userId, launchId });
   }
 
   async getLaunchIdsByUser() {
     const userId = this.context.user.user.id;
     const found = await this.store.trips.find({ userId });
-console.log('3. getLaunchIdsByUser-- ', found)
+
     return found && found.length
-      ? found.map(l => l.dataValues.launchId).filter(l => !!l)
+      ? found.map(l => l.launchId).filter(l => !!l)
       : [];
   }
 

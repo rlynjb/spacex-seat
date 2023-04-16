@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { nanoid } from 'nanoid';
 
 console.log('startup 4. utils - mongodb')
 
@@ -22,9 +23,9 @@ export const createStore = () => {
 
   const users = mongoose.model("User", {
     id: {
-      type: mongoose.Schema.Types.ObjectId,
-      get: (v) => v.toString(),
-      auto: true,
+      type: mongoose.Schema.Types.String,
+      index: { unique: true },
+      default: () => nanoid(7),
     },
     createdAt: {
       type: mongoose.Schema.Types.Date
@@ -42,9 +43,9 @@ export const createStore = () => {
 
   const trips = mongoose.model("Trip", {
     id: {
-      type: mongoose.Schema.Types.ObjectId,
-      get: (v) => v.toString(),
-      auto: true,
+      type: mongoose.Schema.Types.String,
+      index: { unique: true },
+      default: () => nanoid(7),
     },
     createdAt: {
       type: mongoose.Schema.Types.Date

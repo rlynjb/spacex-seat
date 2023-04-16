@@ -5,11 +5,11 @@ console.log('startup 2. resolvers')
 const resolvers = {
   Query: {
     launches: async (_, { pageSize = 20, after }, { dataSources }) => {
-      const allLaunches = await dataSources.launchAPI.getAllLaunches();
+      let allLaunches = await dataSources.launchAPI.getAllLaunches();
       // we want these in reverse chronological order
       allLaunches.reverse();
 
-      const launches = paginateResults({
+      let launches = paginateResults({
         after,
         pageSize,
         results: allLaunches,
@@ -26,15 +26,17 @@ const resolvers = {
           : false,
       };
     },
-    launch: (_, { id }, { dataSources }) =>
-      dataSources.launchAPI.getLaunchById({ launchId: id }),
-    me: async (_, __, { dataSources }) =>
-      dataSources.userAPI.findOrCreateUser(),
+    launch: (_, { id }, { dataSources }) => {
+      return dataSources.launchAPI.getLaunchById({ launchId: id })
+    },
+    me: async (_, __, { dataSources }) => {
+      return dataSources.userAPI.findOrCreateUser()
+    },
   },
   Mutation: {
     bookTrips: async (_, { launchIds }, { dataSources }) => {
-      const results = await dataSources.userAPI.bookTrips({ launchIds });
-      const launches = await dataSources.launchAPI.getLaunchesByIds({
+      let results = await dataSources.userAPI.bookTrips({ launchIds });
+      let launches = await dataSources.launchAPI.getLaunchesByIds({
         launchIds,
       });
 
@@ -50,7 +52,7 @@ const resolvers = {
       };
     },
     cancelTrip: async (_, { launchId }, { dataSources }) => {
-      const result = dataSources.userAPI.cancelTrip({ launchId });
+      let result = dataSources.userAPI.cancelTrip({ launchId });
 
       if (!result)
         return {
@@ -58,7 +60,7 @@ const resolvers = {
           message: 'failed to cancel trip',
         };
 
-      const launch = await dataSources.launchAPI.getLaunchById({ launchId });
+      let launch = await dataSources.launchAPI.getLaunchById({ launchId });
       return {
         success: true,
         message: 'trip cancelled',
@@ -66,7 +68,7 @@ const resolvers = {
       };
     },
     login: async (_, { email }, { dataSources }) => {
-      const user = await dataSources.userAPI.findOrCreateUser({ email });
+      let user = await dataSources.userAPI.findOrCreateUser({ email });
       if (user) {
         user.token = Buffer.from(email).toString('base64');
         return user;
@@ -88,8 +90,7 @@ const resolvers = {
   User: {
     trips: async (_, __, { dataSources }) => {
       // get ids of launches by user
-      const launchIds = await dataSources.userAPI.getLaunchIdsByUser();
-
+      let launchIds = await dataSources.userAPI.getLaunchIdsByUser();
       if (!launchIds.length) return [];
 
       // look up those launches by their ids

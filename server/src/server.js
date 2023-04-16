@@ -31,7 +31,7 @@ const config = {
     if (!isEmail.validate(email)) return { user: null };
 
     // find a user by their email
-    const users = await store.users.find({ email });
+    let users = await store.users.find({ email });
     if (!users) {
       users = await store.users.create({ email });
     }
