@@ -1,16 +1,8 @@
-/*
-Your schema's structure should support the actions that your clients will take. Our example app needs to be able to:
-
-- Fetch a list of all upcoming rocket launches
-- Fetch a specific launch by its ID
-- Log in the user
-- Book a launch for a logged-in user
-- Cancel a previously booked launch for a logged-in user
-*/
-
 import { gql } from 'apollo-server';
+
 console.log('startup 1. schema')
-const typeDefs = gql`
+
+export const typeDefs = gql`
   type Query {
     launches(pageSize: Int, after: String): LaunchConnection!
     launch(id: ID!): Launch
@@ -73,7 +65,3 @@ const typeDefs = gql`
     LARGE
   }
 `;
-
-export {
-  typeDefs
-}
