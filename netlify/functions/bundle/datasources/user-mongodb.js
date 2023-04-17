@@ -1,8 +1,10 @@
 import { MongoDataSource } from "apollo-datasource-mongodb";
 import isEmail from 'isemail';
 
+console.log('startup 3. datasource - user-mongodb')
+
 class UserAPI extends MongoDataSource {
-  constructor(options) {
+  constructor(options) {    
     super(options);
     this.store = options.store;
   }
@@ -12,25 +14,22 @@ class UserAPI extends MongoDataSource {
   }
 
   async findOrCreateUser({ email: emailArg } = {}) {
-    console.log('4) src/datasources/user-mongodb.js')
     const email = this.context && this.context.user
-      ? this.context.user.email
+      ? this.context.user.user.email
       : emailArg;
-
     if (!email || !isEmail.validate(email)) return null;
 
     // since mongoose doesnt have findOrCreate, we'll have to do it manually
     // if theres no user, create one
-    const users = await this.store.users.find({ email: email }).exec();
+    let users = await this.store.users.find({ email }).exec();
     if (!users.length) {
-      users = await this.store.users.create({ email: email });
+      users = await this.store.users.create({ email });
     }
-
     return users && users[0] ? users[0] : null;
   }
 
   async bookTrips({ launchIds }) {
-    const userId = this.context.user.id;
+    let userId = this.context.user.user.id;
     if (!userId) return;
 
     let results = [];
@@ -38,7 +37,7 @@ class UserAPI extends MongoDataSource {
     // for each launch id, try to book the trip and add it to the results array
     // if successful
     for (const launchId of launchIds) {
-      const res = await this.bookTrip({ launchId });
+      let res = await this.bookTrip({ launchId });
       if (res) results.push(res);
     }
 
@@ -46,39 +45,41 @@ class UserAPI extends MongoDataSource {
   }
 
   async bookTrip({ launchId }) {
-    const userId = this.context.user.id;
+    let userId = this.context.user.user.id;
 
-    // find MONGOOSE equivalent
-    const res = await this.store.trips.findOrCreate({
-      where: { userId, launchId },
-    });
+    let res = await this.store.trips.find({
+      userId, launchId
+    }).exec();
+
+    if (!res.length) {
+      res = await this.store.trips.create({
+        userId, launchId
+      });
+    }
+
     return res && res.length ? res[0].get() : false;
   }
 
   async cancelTrip({ launchId }) {
-    const userId = this.context.user.id;
-
-    return !!this.store.trips.deleteOne({ where: { userId, launchId } });
+    const userId = this.context.user.user.id;
+    return this.store.trips.deleteMany({ userId, launchId });
   }
 
   async getLaunchIdsByUser() {
-    const userId = this.context.user.id;
+    const userId = this.context.user.user.id;
+    const found = await this.store.trips.find({ userId });
 
-    const found = await this.store.trips.find({
-      where: { userId },
-    });
     return found && found.length
-      ? found.map(l => l.dataValues.launchId).filter(l => !!l)
+      ? found.map(l => l.launchId).filter(l => !!l)
       : [];
   }
 
   async isBookedOnLaunch({ launchId }) {
     if (!this.context || !this.context.user) return false;
-    const userId = this.context.user.id;
 
-    const found = await this.store.trips.find({
-      where: { userId, launchId },
-    });
+    const userId = this.context.user.user.id;
+    const found = await this.store.trips.find({ userId, launchId });
+
     return found && found.length > 0;
   }
 }

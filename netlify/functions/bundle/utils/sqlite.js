@@ -1,5 +1,7 @@
 import SQL from 'sequelize';
 
+console.log('startup 4. utils - sqlite')
+
 const createStore = () => {
   const Op = SQL.Op;
   const operatorsAliases = {

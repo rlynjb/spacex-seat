@@ -1,7 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
+import { nanoid } from 'nanoid';
 
-export const createMongoDBStore = () => {
-  console.log('1) src/utils/mongodb.js')
+console.log('startup 4. utils - mongodb')
+
+export const createStore = () => {
   const uri = "mongodb+srv://rlynjb:ikwiw@cluster0.shsvqzj.mongodb.net/?retryWrites=true&w=majority";
 
   const db = async() => {
@@ -21,24 +23,42 @@ export const createMongoDBStore = () => {
 
   const users = mongoose.model("User", {
     id: {
-      type: mongoose.Types.ObjectId,
-      auto: true
+      type: mongoose.Schema.Types.String,
+      index: { unique: true },
+      default: () => nanoid(7),
     },
-    createdAt: String,
-    updatedAt: String,
-    email: String,
-    token: String
+    createdAt: {
+      type: mongoose.Schema.Types.Date
+    },
+    updatedAt: {
+      type: mongoose.Schema.Types.Date
+    },
+    email: {
+      type: mongoose.Schema.Types.String
+    },
+    token: {
+      type: mongoose.Schema.Types.String
+    }
   });
 
   const trips = mongoose.model("Trip", {
     id: {
-      type: mongoose.Types.ObjectId,
-      auto: true
+      type: mongoose.Schema.Types.String,
+      index: { unique: true },
+      default: () => nanoid(7),
     },
-    createdAt: String,
-    updatedAt: String,
-    launchId: Number,
-    userId: Number
+    createdAt: {
+      type: mongoose.Schema.Types.Date
+    },
+    updatedAt: {
+      type: mongoose.Schema.Types.Date
+    },
+    launchId: {
+      type: mongoose.Schema.Types.String
+    },
+    userId: {
+      type: mongoose.Schema.Types.String
+    }
   });
 
   return { users, trips };
