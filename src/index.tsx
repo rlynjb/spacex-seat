@@ -34,7 +34,7 @@ export const typeDefs = gql`
 // ref: https://github.com/apollographql/fullstack-tutorial/issues/62
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:9999/.netlify/functions/graphql',
+  uri: 'https://unrivaled-duckanoo-828e41.netlify.app/.netlify/functions/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
