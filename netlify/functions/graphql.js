@@ -21,8 +21,9 @@ const dataSources = () => {
   }
 };
 
-const contextObj = async (req) => {  
-  let auth = (req.headers && req.headers.authorization) || "";
+const contextObj = async (req) => {
+  let header = req.event.headers;
+  let auth = (header && header.authorization) || "";
   let email = Buffer.from(auth, "base64").toString("ascii");
 
   if (!isEmail.validate(email)) return { user: null };
