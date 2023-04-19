@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { nanoid } = require('nanoid');
+const { Schema } = mongoose;
 
 module.exports.createStore = () => {
   const uri = "mongodb+srv://rlynjb:ikwiw@cluster0.shsvqzj.mongodb.net/?retryWrites=true&w=majority";
@@ -19,7 +20,7 @@ module.exports.createStore = () => {
       console.error(error);
     });
 
-  const users = mongoose.model("User", {
+  let users = new Schema({
     id: {
       type: mongoose.Schema.Types.String,
       index: { unique: true },
@@ -39,7 +40,7 @@ module.exports.createStore = () => {
     }
   });
 
-  const trips = mongoose.model("Trip", {
+  let trips = new Schema({
     id: {
       type: mongoose.Schema.Types.String,
       index: { unique: true },
@@ -59,7 +60,10 @@ module.exports.createStore = () => {
     }
   });
 
-  return { users, trips };
+  return {
+    users: mongoose.models.User || mongoose.model('User', users),
+    trips: mongoose.models.Trip || mongoose.model('Trip', trips),
+  };
 };
 
 

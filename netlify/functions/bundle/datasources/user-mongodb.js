@@ -1,7 +1,7 @@
 const { MongoDataSource } = require("apollo-datasource-mongodb");
 const isEmail = require('isemail');
 
-class UserAPI extends MongoDataSource {
+module.exports = class UserAPI extends MongoDataSource {
   constructor(options) {    
     super(options);
     this.store = options.store;
@@ -81,5 +81,3 @@ class UserAPI extends MongoDataSource {
     return found && found.length > 0;
   }
 }
-
-module.exports = UserAPI;

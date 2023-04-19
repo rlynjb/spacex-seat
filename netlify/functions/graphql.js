@@ -1,74 +1,65 @@
-const { ApolloServer, gql } = require('apollo-server-lambda');
+const { ApolloServer } = require('apollo-server-lambda');
 const {
   ApolloServerPluginLandingPageLocalDefault
 } = require('apollo-server-core');
+const isEmail = require('isemail');
 
 const { typeDefs } = require('./bundle/schema.js');
 const { resolvers } = require('./bundle/resolvers.js');
 
-const { LaunchAPI } = require('./bundle/datasources/launch.js');
-const { UserAPI } = require('./bundle/datasources/user-mongodb.js');
+const LaunchAPI = require('./bundle/datasources/launch.js');
+const UserAPI = require('./bundle/datasources/user-mongodb.js');
 
 const { createStore } = require('./bundle/utils/mongodb.js');
-const isEmail = require('isemail');
-
 const store = createStore();
 
-// Construct a schema, using GraphQL schema language
-/*
-const typeDefs = gql`
-  type Query {
-    hello: String
+
+const dataSources = () => {
+  return {
+    launchAPI: new LaunchAPI(),
+    userAPI: new UserAPI({ store }),
   }
-`;
-
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
 };
-*/
 
-const dataSources = () => ({
-  launchAPI: new LaunchAPI(),
-  userAPI: new UserAPI({ store }),
-});
-
-const context1 = async ({ req }) => {
-  console.log('5. context')
-  
-  // simple auth check on every request
-  const auth = (req.headers && req.headers.authorization) || "";
-  const email = Buffer.from(auth, "base64").toString("ascii");
+const contextObj = async (req) => {  
+  let auth = (req.headers && req.headers.authorization) || "";
+  let email = Buffer.from(auth, "base64").toString("ascii");
 
   if (!isEmail.validate(email)) return { user: null };
 
-  // find a user by their email
   let users = await store.users.find({ email });
   if (!users) {
     users = await store.users.create({ email });
   }
-  const user = (users && users[0]) || null;
+  let user = (users && users[0]) || null;
   return { user: { user } };
 };
 
+
 const getHandler = (event, context) => {
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    dataSources,
-    context: context1,
     csrfPrevention: true,
     introspection: true,
     playground: true,
+    debug: true,
     cache: 'bounded',
     plugins: [
       ApolloServerPluginLandingPageLocalDefault({ embed: true }),
     ],
+    origin: '*',
+    credentials: true,
+    typeDefs,
+    resolvers,
+    dataSources,
+    context: contextObj,
   });
 
-  const graphqlHandler = server.createHandler();
+  const graphqlHandler = server.createHandler({
+    cors: {
+      origin: '*',
+      credentials: true
+    }
+  });
   if (!event.requestContext) {
       event.requestContext = context;
   }
