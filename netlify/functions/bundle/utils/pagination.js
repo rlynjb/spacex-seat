@@ -1,4 +1,4 @@
-export const paginateResults = ({
+module.exports.paginateResults = ({
   after: cursor,
   pageSize = 20,
   results,

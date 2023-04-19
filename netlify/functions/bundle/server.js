@@ -1,15 +1,12 @@
 import { ApolloServer } from 'apollo-server';
 import { ApolloServer as ApolloServerLambda } from 'apollo-server-lambda';
 
-import { typeDefs } from './schemas/default-schema.js';
-import { typeDefsAWSLambda } from './schemas/aws-lambda-schema.js';
+import { typeDefs } from './schema.js';
 import { resolvers } from './resolvers.js';
 
 import { LaunchAPI } from './datasources/launch.js';
-//import { UserAPI } from './datasources/user.js';
 import { UserAPI } from './datasources/user-mongodb.js';
 
-//import { createStore } from './utils/sqlite.js';
 import { createStore } from './utils/mongodb.js';
 
 import isEmail from 'isemail';
@@ -45,7 +42,7 @@ const context = async ({ req }) => {
 
 export const createLambdaServer = () => {
   return new ApolloServerLambda({
-    typeDefsAWSLambda,
+    typeDefs,
     resolvers,
     introspection: true,
     playground: true,

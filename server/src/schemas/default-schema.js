@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server';
 
-console.log('startup 1. schema')
+console.log('startup 1. Default schema')
 
 export const typeDefs = gql`
   type Query {

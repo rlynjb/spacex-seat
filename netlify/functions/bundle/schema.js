@@ -1,8 +1,6 @@
-import { gql } from 'apollo-server';
+const { gql } = require('apollo-server-lambda');
 
-console.log('startup 1. schema')
-
-export const typeDefs = gql`
+module.exports.typeDefs = gql`
   type Query {
     launches(pageSize: Int, after: String): LaunchConnection!
     launch(id: ID!): Launch

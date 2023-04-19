@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-lambda';
 
-console.log('startup 1. schema')
+console.log('startup 1. AWS Lambda schema')
 
 export const typeDefsAWSLambda = gql`
   type Query {

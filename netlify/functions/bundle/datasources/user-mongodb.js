@@ -1,7 +1,5 @@
-import { MongoDataSource } from "apollo-datasource-mongodb";
-import isEmail from 'isemail';
-
-console.log('startup 3. datasource - user-mongodb')
+const { MongoDataSource } = require("apollo-datasource-mongodb");
+const isEmail = require('isemail');
 
 class UserAPI extends MongoDataSource {
   constructor(options) {    
@@ -84,6 +82,4 @@ class UserAPI extends MongoDataSource {
   }
 }
 
-export {
-  UserAPI
-}
+module.exports = UserAPI;

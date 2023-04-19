@@ -1,9 +1,7 @@
-import mongoose from "mongoose";
-import { nanoid } from 'nanoid';
+const mongoose = require('mongoose');
+const { nanoid } = require('nanoid');
 
-console.log('startup 4. utils - mongodb')
-
-export const createStore = () => {
+module.exports.createStore = () => {
   const uri = "mongodb+srv://rlynjb:ikwiw@cluster0.shsvqzj.mongodb.net/?retryWrites=true&w=majority";
 
   const db = async() => {

@@ -16,3 +16,7 @@
 
   # Default build command.
   command = "npm run build"
+
+[functions]
+  # https://www.netlify.com/blog/2021/04/02/modern-faster-netlify-functions/
+  #node_bundler = "esbuild"

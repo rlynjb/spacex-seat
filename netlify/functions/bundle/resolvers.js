@@ -1,8 +1,6 @@
-import { paginateResults } from './utils/pagination.js';
+const { paginateResults } = require('./utils/pagination.js');
 
-console.log('startup 2. resolvers')
-
-const resolvers = {
+module.exports.resolvers = {
   Query: {
     launches: async (_, { pageSize = 20, after }, { dataSources }) => {
       let allLaunches = await dataSources.launchAPI.getAllLaunches();
@@ -100,8 +98,4 @@ const resolvers = {
       );
     },
   },
-}
-
-export {
-  resolvers,
 }
