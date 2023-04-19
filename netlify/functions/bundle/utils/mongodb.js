@@ -3,7 +3,7 @@ const { nanoid } = require('nanoid');
 const { Schema } = mongoose;
 
 module.exports.createStore = () => {
-  const uri = "mongodb+srv://rlynjb:ikwiw@cluster0.shsvqzj.mongodb.net/?retryWrites=true&w=majority";
+  const uri = process.env.MONGODB_API;
 
   const db = async() => {
     return await mongoose.connect(uri, {
