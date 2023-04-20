@@ -60,6 +60,8 @@ module.exports.createStore = () => {
     }
   });
 
+  mongoose.disconnect();
+
   return {
     users: mongoose.models.User || mongoose.model('User', users),
     trips: mongoose.models.Trip || mongoose.model('Trip', trips),
