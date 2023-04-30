@@ -27,3 +27,9 @@ cd final/client && npm i && npm start
 
 ## Deploy to Netlify
 ref: https://khalilstemmler.com/articles/tutorials/deploying-a-serverless-graphql-api-on-netlify/
+
+# NOTE
+### Setting Up Authentication and Authorization with Apollo Federation
+ref: https://www.apollographql.com/blog/backend/auth/setting-up-authentication-and-authorization-apollo-federation/
+### Public APIs
+ref: https://github.com/public-apis/public-apis
